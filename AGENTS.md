@@ -6,11 +6,10 @@ This is a small, single-player 2D maze game built in Godot 4 using
 GDScript.
 
 The player navigates a dark maze while carrying a light. Light relays
-are distributed throughout the maze. When the player approaches a relay,
-the relay activates and takes over most of the lighting, while the
-player's own light becomes much dimmer. The player must reach the relay
-and explicitly pass the light back to themselves using an interaction
-input.
+are distributed throughout the maze. The player must press the interaction
+input while near a relay to activate it. An activated relay takes over most
+of the lighting, while the player's own light becomes much dimmer. The
+player can explicitly take the light back at the active relay.
 
 The game should remain intentionally small and simple. Avoid unnecessary
 systems, abstractions, dependencies, or artwork requirements.
@@ -19,13 +18,13 @@ systems, abstractions, dependencies, or artwork requirements.
 
 1.  Start with the player's light at full brightness.
 2.  Navigate the dark maze.
-3.  Approaching an inactive relay automatically activates it.
-4.  The relay's PointLight2D turns on.
+3.  Approach a relay and press the interaction input to activate it.
+4.  The relay's PointLight2D turns on, and all other relays turn off.
 5.  The player's PointLight2D is reduced to 20% of its original Energy.
-6.  The relay stays active even if the player walks away.
-7.  Return to the active relay and press the interaction input.
-8.  The relay turns off and the player's light returns to 100%.
-9.  Continue through the maze.
+6.  The active relay stays on if the player walks away.
+7.  At a different relay, press interact to switch the light to it.
+8.  At the active relay, press interact to take the light back.
+9.  The relay turns off and the player's light returns to 100%.
 10. Reaching the exit displays "YOU WIN!" and stops normal gameplay.
 
 ## Design Goals
@@ -188,66 +187,48 @@ Relay
 └── PointLight2D
 ```
 
-An inactive relay activates automatically when the player enters its
-Area2D.
+A relay activates only when the player is inside its Area2D and presses
+`interact`. Entering the area alone does not activate it.
 
 On activation:
 
-1.  Mark it active.
-2.  Enable its PointLight2D.
+1.  Turn off every other relay.
+2.  Mark this relay active and enable its PointLight2D.
 3.  Dim the player's light to 20% of its original Energy.
 4.  Make it the current active relay.
-5.  Allow interaction with it.
 
-The player must not press a button to initially activate a relay.
+The player may activate a relay while another is active. Activating the new
+relay turns off the previous relay and does not restore the player's light.
 
 ## Active Relay Behavior
 
-The active relay remains active until the player explicitly interacts
-with it.
-
-If the player walks away:
-
--   Keep the relay's PointLight2D on.
--   Keep the player's light at 20%.
--   Do not restore the player's light.
--   Do not automatically deactivate the relay.
-
-The player must return to the active relay and press `interact`.
+The active relay remains on if the player walks away. Leaving its area does
+not restore the player's light. The player can activate a different relay
+by entering its area and pressing `interact`; this switches the active
+relay and leaves the player's light dimmed.
 
 ## Taking the Light Back
 
-When the player is inside the active relay's Area2D and presses
+When the player is inside the currently active relay's Area2D and presses
 `interact`:
 
-1.  Disable the relay's PointLight2D.
-2.  Mark the relay inactive.
-3.  Restore the player's PointLight2D Energy.
-4.  Clear the current active relay.
-5.  Hide the interaction prompt.
+1.  Disable the relay's PointLight2D and mark it inactive.
+2.  Restore the player's PointLight2D Energy.
+3.  Clear the current active relay.
 
-Interaction should only work for the currently active relay.
+Interaction near an inactive relay activates it. Interaction outside all
+relay areas does nothing.
 
 ## Multiple Relays
 
-Only one relay should normally be the current active relay.
-
-If the player enters another relay while one is already active, handle
-it deterministically without accidentally restoring the player's light.
-
-Do not create a complicated simultaneous-relay system unless explicitly
-requested.
+Only one relay can be active at a time. Activating a relay always turns off
+every other relay. Switching relays must not restore the player's light.
 
 ## Interaction Prompt
 
-When the player is inside the active relay's Area2D, show a small UI
-prompt such as:
+When the player is inside a relay's Area2D, show a small UI prompt for enabling or disabling the relay.
 
-`Press E / A to take the light`
-
-The prompt should be hidden during normal exploration, shown near the
-active relay when interaction is possible, and hidden after taking the
-light back or winning.
+Hide the prompt outside all relay areas and after winning.
 
 ## Exit
 
@@ -357,14 +338,16 @@ Verify that:
 ### Relay
 
 -   Relay lights start disabled.
--   Approaching a relay activates it.
+-   Relays remain off until activated with `interact` while nearby.
+-   Interact activates an inactive nearby relay.
 -   Relay light turns on.
 -   Player light becomes exactly 20% of its original Energy.
 -   Leaving does not deactivate the relay.
 -   Leaving does not restore the player's light.
 -   Returning allows interaction.
--   E deactivates the relay.
--   Controller interaction deactivates it.
+-   Activating a different relay switches off the previous one.
+-   E or controller interaction activates an inactive nearby relay.
+-   E or controller interaction at the active relay returns the light.
 -   Player light returns to its original Energy.
 -   Interaction prompt appears and disappears correctly.
 
@@ -382,7 +365,7 @@ Verify that:
 -   Entering another relay does not accidentally restore the player's
     light.
 -   Interact outside a relay does nothing.
--   Interact near an inactive relay does not deactivate it.
+-   Interact near an inactive relay activates it and turns off any other relay.
 -   Winning hides the interaction prompt.
 
 ## Code Style
@@ -416,13 +399,15 @@ FULL PLAYER LIGHT
         ↓
 APPROACH RELAY
         ↓
-RELAY TURNS ON
+PRESS INTERACT
+        ↓
+RELAY TURNS ON (OTHER RELAYS TURN OFF)
         ↓
 PLAYER LIGHT = 20%
         ↓
 PLAYER EXPLORES / MOVES AWAY
         ↓
-RETURN TO RELAY
+RETURN TO ACTIVE RELAY
         ↓
 PRESS INTERACT
         ↓

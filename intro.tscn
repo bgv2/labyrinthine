@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://egapcdqpr4kw"]
+
+[ext_resource type="Script" path="res://scripts/intro.gd" id="1_intro"]
+
+[node name="Intro" type="Node2D" unique_id=1263445300]
+script = ExtResource("1_intro")
+
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=2015996331]
+offset_top = 176.0
+offset_right = 1021.0
+offset_bottom = 663.0
+bbcode_enabled = true
+text = "[center]
+[font_size=72][color=#DDEBFF][b]L A B Y R I N T H I N E[/b][/color][/font_size]
+
+
+
+
+
+[font_size=20][color=#AAB7C7]IN A SEA OF DARKNESS, ONLY YOU CAN FIND THE END.[/color][/font_size]
+
+
+[font_size=20][color=#AAB7C7]WASD / JOYSTICK — MOVE[/color][/font_size]
+[font_size=20][color=#AAB7C7]E / 🅑 — PASS LIGHT TO RELAY (OR TAKE IT BACK)[/color][/font_size]
+
+
+[font_size=20][color=#AAB7C7] PRESS E / 🅑 TO START[/color][/font_size]
+[/center]
+"
