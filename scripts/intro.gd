@@ -11,7 +11,7 @@ func _ready() -> void:
 	InputMap.action_add_event("start_game", start_key)
 
 	var start_button := InputEventJoypadButton.new()
-	start_button.button_index = JOY_BUTTON_B
+	start_button.button_index = JOY_BUTTON_A
 	InputMap.action_add_event("start_game", start_button)
 
 func _unhandled_input(event: InputEvent) -> void:

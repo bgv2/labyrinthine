@@ -20,7 +20,7 @@ systems, abstractions, dependencies, or artwork requirements.
 2.  Navigate the dark maze.
 3.  Approach a relay and press the interaction input to activate it.
 4.  The relay's PointLight2D turns on, and all other relays turn off.
-5.  The player's PointLight2D is reduced to 20% of its original Energy.
+5.  The player's PointLight2D fades to 20% of its original Energy.
 6.  The active relay stays on if the player walks away.
 7.  At a different relay, press interact to switch the light to it.
 8.  At the active relay, press interact to take the light back.
@@ -194,7 +194,7 @@ On activation:
 
 1.  Turn off every other relay.
 2.  Mark this relay active and enable its PointLight2D.
-3.  Dim the player's light to 20% of its original Energy.
+3.  Fade the player's light to 20% of its original Energy.
 4.  Make it the current active relay.
 
 The player may activate a relay while another is active. Activating the new
@@ -212,8 +212,8 @@ relay and leaves the player's light dimmed.
 When the player is inside the currently active relay's Area2D and presses
 `interact`:
 
-1.  Disable the relay's PointLight2D and mark it inactive.
-2.  Restore the player's PointLight2D Energy.
+1.  Fade the relay's PointLight2D out, then disable it and mark it inactive.
+2.  Fade the player's PointLight2D Energy back to its original value.
 3.  Clear the current active relay.
 
 Interaction near an inactive relay activates it. Interaction outside all
@@ -230,6 +230,23 @@ When the player is inside a relay's Area2D, show a small UI prompt for enabling 
 
 Hide the prompt outside all relay areas and after winning.
 
+## Light Animation
+
+The player and active relay lights pulse slowly by changing their texture
+scale. Player light Energy transitions gradually when passing or taking back
+the light. Relay lights fade in when activated and fade out before being
+disabled. Keep the resting dimmed player Energy at exactly 20% of its
+original Energy.
+
+## Relay Toggle Sounds
+
+Play `toggle_on.wav` when a relay is activated. Play `toggle_off.wav` when
+the player takes the light back at the active relay. When switching directly
+to another relay, play only `toggle_on.wav`; do not play the off sound for
+the relay being switched off.
+
+Play `sci_fi_confirm.wav` when the player wins.
+
 ## Exit
 
 The existing Exit should be an `Area2D`.
@@ -240,9 +257,10 @@ When the player enters it:
 2.  Display a centered `YOU WIN!` message.
 3.  Stop player movement.
 4.  Disable relay interaction.
-5.  Hide the interaction prompt.
+5.  Show the win message over a dark background.
+6.  Show an E / B prompt that returns to the intro screen; map B to the same physical South/A button used by interact.
 
-Do not automatically change scenes.
+Do not change scenes automatically on winning; wait for the E / B replay input, mapped to the same physical South/A button used by interact.
 
 ## Recommended Scripts
 
@@ -341,22 +359,29 @@ Verify that:
 -   Relays remain off until activated with `interact` while nearby.
 -   Interact activates an inactive nearby relay.
 -   Relay light turns on.
--   Player light becomes exactly 20% of its original Energy.
+-   Player light fades to and settles at 20% of its original Energy.
 -   Leaving does not deactivate the relay.
 -   Leaving does not restore the player's light.
 -   Returning allows interaction.
 -   Activating a different relay switches off the previous one.
 -   E or controller interaction activates an inactive nearby relay.
 -   E or controller interaction at the active relay returns the light.
--   Player light returns to its original Energy.
+-   Player light fades back to its original Energy.
 -   Interaction prompt appears and disappears correctly.
+
+### Light Animation
+
+-   Player and active relay lights pulse slowly.
+-   Player light Energy transitions gradually and settles at the target.
+-   Relay lights fade in when activated and fade out before being disabled.
 
 ### Exit
 
 -   Entering the exit displays `YOU WIN!`.
 -   Movement stops after winning.
 -   Relay interaction stops after winning.
--   The win message remains visible.
+-   The win message remains visible over a dark background.
+-   E or controller B returns to the intro screen.
 
 ### Edge Cases
 
