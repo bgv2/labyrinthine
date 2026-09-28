@@ -1141,6 +1141,54 @@ energy = 2.0
 texture = ExtResource("3_61jxt")
 texture_scale = 3.0
 
+[node name="Relay (Area2D)2" type="Area2D" parent="." unique_id=826539086]
+position = Vector2(786, 417)
+
+[node name="Sprite2D" type="Sprite2D" parent="Relay (Area2D)2" unique_id=2008383658]
+scale = Vector2(0.296875, 0.296875)
+texture = ExtResource("4_3o6fg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Relay (Area2D)2" unique_id=807132163]
+shape = SubResource("RectangleShape2D_n46dl")
+
+[node name="PointLight2D" type="PointLight2D" parent="Relay (Area2D)2" unique_id=1658016216]
+scale = Vector2(0.12890625, 0.12890625)
+energy = 2.0
+texture = ExtResource("3_61jxt")
+texture_scale = 3.0
+
+[node name="Relay (Area2D)3" type="Area2D" parent="." unique_id=1937642644]
+position = Vector2(279, 393)
+
+[node name="Sprite2D" type="Sprite2D" parent="Relay (Area2D)3" unique_id=248192949]
+scale = Vector2(0.296875, 0.296875)
+texture = ExtResource("4_3o6fg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Relay (Area2D)3" unique_id=622586395]
+shape = SubResource("RectangleShape2D_n46dl")
+
+[node name="PointLight2D" type="PointLight2D" parent="Relay (Area2D)3" unique_id=981482290]
+scale = Vector2(0.12890625, 0.12890625)
+energy = 2.0
+texture = ExtResource("3_61jxt")
+texture_scale = 3.0
+
+[node name="Relay (Area2D)4" type="Area2D" parent="." unique_id=1728540198]
+position = Vector2(863, 154)
+
+[node name="Sprite2D" type="Sprite2D" parent="Relay (Area2D)4" unique_id=769422813]
+scale = Vector2(0.296875, 0.296875)
+texture = ExtResource("4_3o6fg")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Relay (Area2D)4" unique_id=1559417532]
+shape = SubResource("RectangleShape2D_n46dl")
+
+[node name="PointLight2D" type="PointLight2D" parent="Relay (Area2D)4" unique_id=259960854]
+scale = Vector2(0.12890625, 0.12890625)
+energy = 2.0
+texture = ExtResource("3_61jxt")
+texture_scale = 3.0
+
 [node name="Exit (Area2D)" type="Area2D" parent="." unique_id=1069251263]
 position = Vector2(0, 4)
 
